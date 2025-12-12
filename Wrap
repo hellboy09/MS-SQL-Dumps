@@ -1,0 +1,302 @@
+RDBMS in market
+
+Oracle DB
+used for running online transaction processing, data warehousing and mixed DB workloads
+MS SQL Server
+Stable, secure and reliable
+it supports wide variety of transaction processing, analytics and BI apps in corporate IT env.
+MySQL
+PostgreSQL
+Maria DB
+Open source
+
+MS SQL 
+
+Relational DB Engine - store data in table, columns and rows
+Integration Service (SSIS) - Data movement tool - Import/Export tool
+Reporting Service (SSRS) - Create reports and serve to end user
+Analysis Service (SSAS) - used to query data from main DB engine
+
+Pros -
+Various supported edition
+premier support
+on-premises and cloud DB support
+Support Linux
+plenty of tools and apps
+good documentation
+
+Cons - 
+Expensive
+difficult licensing process that's always changing
+
+Editions
+Enterprise - larger org - HA
+Standard - Basic DB management and BI DB for small org
+web - low total cost of ownership option for webhosting companies
+Developer - Same as enterprise used by DEV to test, cannot used as PROD
+Express - Free DB used for independent apps
+
+Installation 
+Prerequisites 
+Hard disk - min 8 GB - NTFS or ReFS format FAT32 supported not recommended
+Memory - Express - 512 mb other 1 GB
+Processor - X64 / 1.4 GHz
+Software - .NET 4.6 for DB engine, Replication, Master Data service
+
+2022 - can be installed in docker
+
+Collation - 
+-- Compare 'apple' and 'Apple' using Case-Insensitive collation
+SELECT
+    CASE WHEN 'apple' COLLATE Latin1_General_CI_AS = 'Apple'
+    THEN 'Match'
+    ELSE 'No Match'
+    END AS CI_Result;
+
+-- Result: Match
+-----------------------------------------------------------------------
+-- Compare 'apple' and 'Apple' using Case-Sensitive collation
+SELECT
+    CASE WHEN 'apple' COLLATE Latin1_General_CS_AS = 'Apple'
+    THEN 'Match'
+    ELSE 'No Match'
+    END AS CS_Result;
+
+-- Result: No Match
+
+Default Instance - one in a server
+Named Instance - Multiple instance in one server
+Ex: Running SQL Server 2019 for one application and SQL Server 2022 for a new application.
+
+Memory allocation - 80/20 SQL/OS
+File stream - to store and manage large unstructured data, such as documents, images, and videos, directly within the NTFS file system
+
+Database - Rows and Columns
+
+MSSQL Table allowed - 2 billions
+MSSQL Columns - 1024 MySQL - 4096
+Field - Column - Some calls intersection of a row and column
+Record - Row - Collection of fields
+Key - data item used to identify the record, used to make relationship with other tables.
+Type of keys
+Candidate key - attribute or set of attributes that uniquely identify a record, table can have multiple candidate key
+Primary key - set of one or more fields of table uniquely identifies a record in table, cannot have be NULL, Clustered index
+Secondary key - candidate key that not selected as primary key
+Unique key - Can be NULL, Non Clustered index
+Composite key - combination of more than can used to uniquely identify each record
+Foreign key - field in database table that is primary key in another table
+
+Transaction - access and modify content in DB, use read/write operations
+ACID - Ensure accuracy and integrity of data in DB, ensure data doesn't become corrupt
+
+Atomicity - trans should be completely executed or fail - It provide reliability
+Consistency - DB must remains consistent state after any trans - Data integrity
+Isolation - Ensuring that the trans will not be changed by any other concurrent trans
+Durability - once a trans is completed and committed its changes are persisted permanently in DB. trans are recorded on permanent memory.
+
+Normalization - Normal form
+1NF - it contains only atomic values, value that cannot be divided
+no repeating groups (fields or attributes that are not repeated)
+
+2NF - should be 1NF
+all partial key dependencies are removed, where an attribute in a table depends on only a part of the primary key and not on the whole key.
+
+3NF - should 2NF
+non primary key columns shouldn't depend in the other non primary key column
+should not transitively dependent
+
+go - separate the query
+
+SQL Commands
+DML(data manipulation lang) - Select, insert, update, delete, merge
+DDL(data definition lang) - create, drop, alter, truncate
+DCL(data control lang) - grant, revoke
+TCL(transaction control lang) - commit, rollback, savepoint
+
+scheme - logical collection of related database object
+
+temporary table - #tablename 
+Views - virtual table, doesn't store data
+
+Select - order - where, group by, having, sort by, limit/offset
+
+Operator - 
+Arithmetic operator - mathematical calculation - +,-,*,/,%
+Relational operator - relation between two column - >,<,=,<=,>=,!= or <>,!<,!>
+Logical operator = AND, OR, NOT, BETWEEN...AND, IS NULL, IS NOT NULL, LIKE, UNIQUE, IN, NOT IN
+Expressions - Boolean expression - = (equals)
+Numerical expression - select * from employee where age*2 > 50
+Date expression - select * from employee where DOB > Date('1995/01/01')
+
+Conditions - True or False
+
+Clause - 
+Where - used to specify the condition while fetching data from a single table or joining multiple table.
+Order by - ASC, DESC
+Group by - group by column name
+Having - condition after group by
+-- comment
+
+Joins -
+Inner join - Intersection 
+Left join - not matching rows in right will be NULL
+Right join - right from the left matching rows
+Full join - Union
+
+syntax - select table1.column1,table2.column1 from table1 join on table1.matchingcol = table2.matchingcol
+
+Subquery - uses where value in () parenthesis in - keyword
+Insert - insert into tablename (columnname,..) value (value,..)
+create - create table name (Column1 int not null identity primary key, column2 varchar(20))
+Select into - copy from existing table
+update - update tablename set column1 = value1 where condition
+select firstname+' '+lastname, empID from tablename ----- concat
+Delete - delete from tablename
+begin tran - not saved in disk
+rollback tran - can be reverted
+commit - will write to disk
+truncate - cannot be rolled back truncate table tablename, identity col will reseed
+Stored Procedure
+better perf - uses same execution plan
+reduced NW traffic - sends less data across the NW
+Reusable - used by multiple user
+security - source code is not visible by calling the SP name
+create procedure SPname
+as
+sql statement
+go
+exec SPname
+parse with @param (@city varchar(20))
+Function - 
+
+MSSQL management tools
+SSMS - config, manage, administer and dev
+Config manager - config on server service, server and client protocol and client alias
+profiler - monitor an instance of the DB engine and analysis service GUI (trace) query debug
+DB engine tuning advisor - helps to create optimal sets of indexes, indexed views and partitions
+Data tools - provides IDE for building solutions for the BI components, analysis, reporting and integration services.
+
+print @@servername
+parallelism - cost of the query is time in SQL - default 5 more than 5 mins query will run on parallelism
+SQL SCM - uses WMI 
+
+Types of DBs
+user DB - DBs are created by a user which have permission to create a DB
+System DB - needed for your SQL server to operate, keeps meta data about MSSQL instance
+
+Master DB - core sys DB to manage SQL server instance
+TempDB - temptables, tablecariables, cursor, work tables, row versioning, create rebuild indexes sorted in TempDB
+MS DB - primary DB to manage agent config
+Resource - hidden physically storing all of the SQL server 2005 sys objects
+model -template DB for all user defined DB
+distribution - primary data to support SQL server replication
+
+Pages - 
+8 pages 1 extent - 8kb
+128 pages per mb
+96 bytes header - system info (page no, type, amount of free space on the page and allocation unit ID of the object that owns the page)
+36 bytes row offset table - address of the record in the page
+Log files don't have pages
+Disk I/O operations are performed at the page level
+data pages contains actual rows of data
+index page contains index references about where the data is saved
+system pages stores metadata about the org organization of the data - (PFS,GAM,SGAM,IAM,DCM,BCM pages)
+
+Extent - space are managed
+8 pages 1 extent - 64kb
+16 extent per mb
+uniform extent - owned by single object 
+mixed extent - shared up to 8 diff objects
+
+PFS page free space - record the allocation status and amount of free space
+Global Allocation Map (GAM) Pages: Track which extents are free (unallocated) or allocated across a large segment of the data file.
+Shared Global Allocation Map (SGAM) Pages: Track which extents are currently being used as mixed extents (shared by up to eight objects) and have at least one unused page.
+Differential Change Map (DCM) Pages
+These pages track which extents have been modified since the last full database backup. This is crucial for creating fast differential backups.
+Bulk Changed Map (BCM) Pages
+These pages track which extents have been modified by bulk operations since the last BACKUP LOG operation. This is important for recovering the database in a disaster scenario.
+
+Architecture
+Protocol layer - SNI server name identification TDS
+Shared memory - client and server on same machine
+TCP/IP - remote separate machine 
+Named pipe - connection via LAN same NW
+
+Relational Engine - 
+query processor
+try to find the best way to perform the query
+CMD Parser - check syntactic and semantic error - generate query tree
+Optimizer - create execution plan for user query (DML) DDL are compiled
+role is to find the less time to execute the query
+phase 0 - trivial plan - looks for only one workable plan rather finding the other plan
+phase 1 - transaction processing plan - looks for simple and complex plan
+phase 2 - Parallel processing and optimization - finding all other possible options for query execution
+Query executor - calls access method
+Storage engine - store data in storage system 
+Access method - interface between query executor and buffer manager/transaction manager
+Select - buffer manager
+Non Select - transaction manager
+Buffer manager - 
+Plan cache - have previous plan
+data parsing: buffer cache & data storage - 
+dirty pages - if change happen on memory without commit on disk.
+Transaction manager - non select 
+Log manager - keeps track of all updates done in the sys via logs in transact logs
+Lock manager - during transaction associated data in data storage is in lock state - ACID
+
+Primary data file - default file .mdf
+info about DB, pointers to other files in the DB
+Secondary data file - optional and used to hold user DB objects .ndf
+used in multiple disk
+Transaction log file - holds all DB modification events .ldf
+used to recover DB
+Filegroups - group the secondary data files logically for administrative purpose
+recommended to create separate filegroup for secondary data files
+
+Transaction log - .LDF, write ahead logging, log has LSN 
+log divided into multiple sections - VLF
+DBCC LOGINFO
+
+DB Backup
+business protection
+unlimited data access
+credibility and accountability
+time effective
+
+Recovery model - how much transaction log is saved, point in time restore possible?
+simple - saves trans log and remove all completed transactions when a checkpoint occurs
+log backup not supported because log records are removed when a checkpoint occurs
+point in time recovery is not possible
+transaction log is small 
+only full and differential backup possible
+full - transaction log will be available
+supports all option for backing up and restoring
+transaction log stay until a log backup is performed
+bulk-logged - minimize transaction log space usage when bulk logged operations like BULK INSERT, SELECT INTO or CREATE INDEX are executed.
+No wait is used to change recovery model immediately rather waiting for the transactions to complete
+
+Full backup - backs up the whole DB
+includes part of trans log so full DB can be recovered after a full DB backup is restored
+represent the time backup is finished
+Full backup in simple recovery - work loss exposure returns to zero and new starts after the backup.
+Full backup in full recovery - transaction log backups are also required.
+Differential backup - based on most recent full backup
+captures only the data that has changed since the full backup
+it relies on bitmap page that contains on every extent
+
+Transaction log backup - full backup is required
+every transaction log will have a LSN and every backup will have trans log with LSN post the backup of committed transaction old will be truncated.
+chain - each backup from the chain has firstLSN(oldest log record in the backup set) and lastLSN(the number of the next log record after the backup set) 
+Tail log backup - DB should be online
+last backup of the DB, captures any log records that have not yet been backed up
+
+Copy only backup - will not change the sequence of all other backups, chain will not affected
+
+Restore - 
+Complete Database restore - during restore DB will be offline
+Data file (File restore) - during restore files will be offline
+data page (Page restore) - simple recovery model cannot perform restore
+
+
+
+
