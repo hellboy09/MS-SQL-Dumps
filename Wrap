@@ -297,6 +297,95 @@ Complete Database restore - during restore DB will be offline
 Data file (File restore) - during restore files will be offline
 data page (Page restore) - simple recovery model cannot perform restore
 
+DBCC CHECKDB
+check the DB is performing as expected
+DBCC CHECKALLOC - check the consistency of disk space allocation structures for specified DB
+DBCC CHECKTABLE - check integrity of all the pages and structure that make up the table or indexed view
+DBCC CHECKCATALOG - check for catalog consistency within the specified DB. DB must be online
+DBCC CHECKDB (DBname, repair_rebuild) 
+DBCC CHECKDB (DBname, repair_allow_data_loss)
+alter database DBname set single_user (multi_user) - better to keep DB in single user mode
 
+Page level Restore/Recovery
+used to replace corrupted pages of info in DB with uncorrupted data from backup
 
+Restore Master DB -
+net start mssqlserver /m
+-- CREATE TEST USER
+BACKUP DATABASE [master] TO  DISK = N'C:\SQL_BACKUPS\master_backup.bak' WITH NOFORMAT, NOINIT,  NAME = N'master-Full Database Backup', SKIP, NOREWIND, NOUNLOAD,  STATS = 10
+GO
+restore database master from disk = 'C:\SQL_BACKUPS\master_backup.bak' with replace;
+-- RUN CMS as Admin and Type
+net stop mssqlserver
 
+net start mssqlserver /m
+
+restore database master_recovery from disk = 'C:\SQL_BACKUPS\master_backup_testrestore.bak' with
+move 'master' to 'C:\master_recovery.mdf',
+move 'mastlog' to 'C:\mastlog_recovery.ldf';
+-- C:\SQL_DATA_FILES\MSSQL13.MSSQLSERVER\MSSQL\DATA
+USE [master]
+GO
+EXEC master.dbo.sp_detach_db @dbname = N'master_recovery'
+GO
+
+Maintenance plan - it creates a integration service package which run by agent job
+
+MSSQL Security model
+create login [user1] from windows
+create login user1 with password = 'temp' must_change, check_expiration = on
+grant impersonate any login to (old acc), new acc;
+Server roles - help you manage the permissions on server
+Fixed  - built in 
+User defined - 
+Database Roles - DB permissions
+Permissions - GRANT, DENY, REVOKE
+
+P Drive (Page file)
+S Drive (System Databases and SQL Logs)
+G Drive (SQL Data for User Databases)
+H Drive (SQL Log for User Databases)
+T Drive (TempDB)
+
+Agent - 
+Jobs - steps
+Schedule - 
+Alerts - triggers on event
+Operator - Contact info
+DB mail - Used to send emails - Queued architecture
+activity monitor - view the sysjobactivity
+
+HA -
+Replication - source data will be copied to destination through rep agent(jobs)
+Publisher - source
+Distributor - optional / stores replicated data for subscriber
+Subscriber - destination
+
+Log shipping - database level tech
+primary to secondary
+log will be saved in shared folder and copied to secondary and restored
+
+Mirroring
+primary to secondary through network transaction basis with mirroring endpoint and port number
+principal - source server
+mirror - destination server
+witness server - used to automatic failover (optional)
+
+Clustering - instance level
+data saved in shared location used by both primary and secondary servers based on the availability of the server 
+Active node
+passive node
+
+Always on availability group - group of DB level tech
+primary data copied to secondary through NW transaction basis, clustering setup is required without shared storage.
+primary replica - source
+secondary replica - destination 8 group supported
+
+Stats - set statistics IO,time on
+
+TDE- transparent data encryption
+protect data by encrypting the data file and log on the disk
+Not encrypted in memory
+Column/Cell-Level Encryption - Encrypted on disk and memory until DECRYPTBYKEY function is used
+Backup encryption - 
+Always Encrypted - DB admin cannot the read the data, only client app can decrypt the data
