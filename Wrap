@@ -130,6 +130,34 @@ Date expression - select * from employee where DOB > Date('1995/01/01')
 
 Conditions - True or False
 
+Function - we cannot call SP in a select or insert or delete function can
+create function funcname
+returns datatype as
+begin
+sql statement
+return value
+end
+Trigger - special type of SP automatically runs when specific event occurs
+usually setup to fire in response to DML event
+Index 
+clustered - only one for a table/views, sorted order of actual data rows
+NonClustered - multiple index for tables, has (row locator)pointer of the actual data rows in leaf tree
+query engine add step to locate actual data, cannot sorted
+
+Types
+composite index - index have more than one column, in SQL server up to 16 column can be included. but doesn't exceed 900byte limit
+unique index - all the values in column unique
+Covering index - can have first and last name with contact number in index with all the column
+
+Index Fragmentation - common source of DB performance degradation
+internal fragmentation - lot of empty space in data pages
+external fragmentation - when logical order of pages in index doesn't match physical order of pages in data file
+fetched from DMV
+Fix
+rebuild - fragmentation is > 30% - order the complete index,  lock the table
+reorganize - 11-30%  - organize the index
+
+
 Clause - 
 Where - used to specify the condition while fetching data from a single table or joining multiple table.
 Order by - ASC, DESC
