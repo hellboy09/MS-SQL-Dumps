@@ -417,3 +417,9 @@ Not encrypted in memory
 Column/Cell-Level Encryption - Encrypted on disk and memory until DECRYPTBYKEY function is used
 Backup encryption - 
 Always Encrypted - DB admin cannot the read the data, only client app can decrypt the data
+
+Checkpoint
+Issue during patching
+Critical DB issue
+Max Log Size - 2 TB
+DBCC Check 
